@@ -13,19 +13,23 @@ import http from "node:http";
 
 const users = [];
 
-const server = http.createServer(async (req, res) => {
-  const { method, url } = req;
+async function parseRequestBody(req) {
   const buffers = [];
-
   for await (const chunck of req) {
     buffers.push(chunck);
   }
-
   try {
-    req.body = JSON.parse(Buffer.concat(buffers).toString());
+    req = JSON.parse(Buffer.concat(buffers).toString());
   } catch {
-    req.body = null;
+    req = null;
   }
+  return req;
+}
+
+const server = http.createServer(async (req, res) => {
+  const { method, url } = req;
+
+  req.body = await parseRequestBody(req);
 
   if (method === "GET" && url === "/users") {
     return res
@@ -35,15 +39,20 @@ const server = http.createServer(async (req, res) => {
   if (method === "POST" && url === "/users") {
     if (req.body) {
       const { name, email, age } = req.body;
-      const user = {
-        id: 1,
-        name,
-        age,
-        email,
-      };
-      users.push(user);
-      return res.writeHead(201).end();
+
+      if (name && email && age) {
+        const user = {
+          id: 1,
+          name,
+          age,
+          email,
+        };
+        users.push(user);
+
+        return res.writeHead(201).end();
+      }
     }
+    return res.writeHead(400).end("Error from register");
   }
 
   return res.writeHead(404).end();
