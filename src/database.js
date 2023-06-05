@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 
 const dbname = "../db.json";
@@ -26,6 +27,7 @@ export class Database {
   }
 
   insert(table, data) {
+    data = { id: randomUUID(), ...data };
     if (Array.isArray(this.#database[table])) {
       this.#database[table].push(data);
     } else {

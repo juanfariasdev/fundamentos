@@ -30,7 +30,6 @@ const server = http.createServer(async (req, res) => {
 
       if (name && email && age) {
         const user = {
-          id: 1,
           name,
           age,
           email,
