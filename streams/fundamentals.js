@@ -27,5 +27,15 @@ class MultiplyByTenStream extends Writable{
     }
 }
 
+// Transform Streams are readable and writable
+class InvertNumberStream extends Transform{
+    _transform(chunk, enconding, callback){
+        const transformed = Number(chunk.toString()) * -1;
+
+        callback(null, Buffer.from(String(transformed)))
+    }
+}
+
 new OneToHundredStream()
+.pipe(new InvertNumberStream())
 .pipe(new MultiplyByTenStream())
