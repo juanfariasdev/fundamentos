@@ -3,16 +3,15 @@ import http from 'node:http';
 
 // GET, POST, PUT, PATCH, DELETE
 
-// GET => Buscar uma informação
-// POST => Criar uma Informação no back-end
-// PUT => Atualizar um recurso no back-end
-// PATCH => Atualizar uma informação uma e especifica de um recurso no back-end
-// DELETE => Deleta um recurso do back-end
+// GET => get a information
+// POST => Create a information in back-end
+// PUT => Update a resource in back-end
+// PATCH => Update a resource-specific information in the back-end
+// DELETE => Delete a resource in back-end
 
-// Stateful => Somente guarda dados em memória
-// Stateless => Guarda dados em meios externos
+// Stateful => They are only to save data in memory
+// Stateless => Save data on external media
 
-// Cabeçalhos (Requisição/resposta) => Metadados
 
 const users = []
 

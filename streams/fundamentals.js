@@ -1,5 +1,6 @@
-import { Readable, Writable } from 'node:stream';
+import { Readable, Transform, Writable } from 'node:stream';
 
+// Readable Streams are only possible to read and nothing more 
 class OneToHundredStream extends Readable{
     constructor(){
         super();
@@ -19,7 +20,7 @@ class OneToHundredStream extends Readable{
         }, 1000)
     }
 }
-
+// Writable Streams are only possible to write and nothing more
 class MultiplyByTenStream extends Writable{
     _write(chunck, enconding, callback){
         console.log(Number(chunck.toString()) *10);
