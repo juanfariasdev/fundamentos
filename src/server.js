@@ -1,5 +1,4 @@
-import http from 'node:http';
-
+import http from "node:http";
 
 // GET, POST, PUT, PATCH, DELETE
 
@@ -12,43 +11,42 @@ import http from 'node:http';
 // Stateful => They are only to save data in memory
 // Stateless => Save data on external media
 
-
-const users = []
+const users = [];
 
 const server = http.createServer(async (req, res) => {
-    const { method, url } = req;
-    const buffers = [];
+  const { method, url } = req;
+  const buffers = [];
 
-    for await (const chunck of req){
-        buffers.push(chunck);
-    }
+  for await (const chunck of req) {
+    buffers.push(chunck);
+  }
 
-    try{
+  try {
     req.body = JSON.parse(Buffer.concat(buffers).toString());
-    } catch{
-        req.body = null
-    }
+  } catch {
+    req.body = null;
+  }
 
-    if (method === 'GET' && url === '/users') {
-        return res
-        .setHeader('Content-type', 'application/json')
-        .end(JSON.stringify(users));
+  if (method === "GET" && url === "/users") {
+    return res
+      .setHeader("Content-type", "application/json")
+      .end(JSON.stringify(users));
+  }
+  if (method === "POST" && url === "/users") {
+    if (req.body) {
+      const { name, email, age } = req.body;
+      const user = {
+        id: 1,
+        name,
+        age,
+        email,
+      };
+      users.push(user);
+      return res.writeHead(201).end();
     }
-    if(method === 'POST' && url === '/users'){
-        if(req.body){
-        const {name, email, age} = req.body;
-        const user = {
-            id: 1,
-            name,
-            age,
-            email
-        }
-        users.push(user)
-        return res.writeHead(201).end()
-    }
-    }
+  }
 
-    return res.writeHead(404).end();
+  return res.writeHead(404).end();
 });
 
 server.listen(3333);
