@@ -1,9 +1,10 @@
 import { Database } from "./database.js";
+import { buildRoutePath } from "./utils/build-route-path.js";
 const database = new Database();
 export const Routes = [
   {
     method: "GET",
-    path: "/users",
+    path: buildRoutePath("/users"),
     handler: (req, res) => {
       const users = database.select("users");
 
@@ -12,7 +13,7 @@ export const Routes = [
   },
   {
     method: "POST",
-    path: "/users",
+    path: buildRoutePath("/users"),
     handler: (req, res) => {
       if (req.body) {
         const { name, email, age } = req.body;
@@ -29,6 +30,13 @@ export const Routes = [
         }
       }
       return res.writeHead(400).end("Error from register");
+    },
+  },
+  {
+    method: "DELETE",
+    path: buildRoutePath("/users"),
+    handler: (req, res) => {
+      const { id } = req.params;
     },
   },
 ];

@@ -13,6 +13,10 @@ import { Routes } from "./routes.js";
 // Stateful => They are only to save data in memory
 // Stateless => Save data on external media
 
+// Query Parameters: stateful = http://localhost:3334/users?userId=1&name=Juan => filters and paginations
+// Route Parameters: http://localhost:3334/users/1 => Identification from resource
+// Request Body: POST http://localhost:3334/users => Send information using body => forms
+
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
 
