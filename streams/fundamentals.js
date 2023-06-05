@@ -9,7 +9,7 @@ class OneToHundredStream extends Readable{
         const i = this.index++
 
         setTimeout(()=>{
-            if(i > 3){
+            if(i > 100){
                 this.push(null);
                 return
             } else{
@@ -20,5 +20,12 @@ class OneToHundredStream extends Readable{
     }
 }
 
+class MultiplyByTenStream extends Writable{
+    _write(chunck, enconding, callback){
+        console.log(Number(chunck.toString()) *10);
+        callback()
+    }
+}
+
 new OneToHundredStream()
-.pipe(process.stdout)
+.pipe(new MultiplyByTenStream())
