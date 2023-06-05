@@ -1,6 +1,6 @@
 import http from "node:http";
 import { ParseRequestBody } from "./middleware/parseRequestBody.js";
-import { Database } from "./database.js";
+import { Routes } from "./routes.js";
 
 // GET, POST, PUT, PATCH, DELETE
 
@@ -13,35 +13,17 @@ import { Database } from "./database.js";
 // Stateful => They are only to save data in memory
 // Stateless => Save data on external media
 
-const database = new Database();
-
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
 
   await ParseRequestBody(req, res);
 
-  if (method === "GET" && url === "/users") {
-    const users = database.select("users");
-    return res.end(JSON.stringify(users));
+  const route = Routes.find(
+    (route) => route.method === method && route.path === url
+  );
+  if (route) {
+    return route.handler(req, res);
   }
-  if (method === "POST" && url === "/users") {
-    if (req.body) {
-      const { name, email, age } = req.body;
-
-      if (name && email && age) {
-        const user = {
-          name,
-          age,
-          email,
-        };
-        database.insert("users", user);
-
-        return res.writeHead(201).end();
-      }
-    }
-    return res.writeHead(400).end("Error from register");
-  }
-
   return res.writeHead(404).end();
 });
 
