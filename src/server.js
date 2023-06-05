@@ -1,5 +1,6 @@
 import http from "node:http";
 import { ParseRequestBody } from "./middleware/parseRequestBody.js";
+import { Database } from "./database.js";
 
 // GET, POST, PUT, PATCH, DELETE
 
@@ -12,7 +13,7 @@ import { ParseRequestBody } from "./middleware/parseRequestBody.js";
 // Stateful => They are only to save data in memory
 // Stateless => Save data on external media
 
-const users = [];
+const database = new Database();
 
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
@@ -20,6 +21,7 @@ const server = http.createServer(async (req, res) => {
   await ParseRequestBody(req, res);
 
   if (method === "GET" && url === "/users") {
+    const users = database.select("users");
     return res.end(JSON.stringify(users));
   }
   if (method === "POST" && url === "/users") {
@@ -33,7 +35,7 @@ const server = http.createServer(async (req, res) => {
           age,
           email,
         };
-        users.push(user);
+        database.insert("users", user);
 
         return res.writeHead(201).end();
       }
