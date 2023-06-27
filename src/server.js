@@ -1,6 +1,7 @@
 import http from "node:http";
 import { ParseRequestBody } from "./middleware/parseRequestBody.js";
 import { Routes } from "./routes.js";
+import { extractQueryParams } from "./utils/extract-query-params.js";
 
 // GET, POST, PUT, PATCH, DELETE
 
@@ -28,7 +29,10 @@ const server = http.createServer(async (req, res) => {
   if (route) {
     const routeParams = req.url.match(route.path);
 
-    req.params = { ...routeParams.groups };
+    const { query, ...params } = routeParams.groups;
+
+    req.params = params;
+    req.query = query ? extractQueryParams(query) : {};
 
     return route.handler(req, res);
   }
