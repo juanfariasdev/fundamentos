@@ -33,6 +33,15 @@ export class Database {
       this.#persist();
     }
   }
+  update(table, id, data) {
+    const rowIdx = this.#database[table].findIndex((row) => row.id === id);
+
+    if (rowIdx > -1) {
+      this.#database[table][rowIdx] = { id, ...data };
+
+      this.#persist();
+    }
+  }
 
   insert(table, data) {
     data = { id: randomUUID(), ...data };
