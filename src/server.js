@@ -23,9 +23,11 @@ const server = http.createServer(async (req, res) => {
   await ParseRequestBody(req, res);
 
   const route = Routes.find(
-    (route) => route.method === method && route.path === url
+    (route) => route.method === method && route.path.test(url)
   );
   if (route) {
+    const routeParams = req.url.match(route.path);
+
     return route.handler(req, res);
   }
   return res.writeHead(404).end();
